@@ -63,7 +63,7 @@ DebugBattlePlayerName:
 	db "Tom@"
 
 DebugBattleRivalName:
-	db "Juerry@"
+	db "Jerry@"
 
 DebugMenuOptions:
 	db   "FIGHT"
@@ -97,18 +97,34 @@ TestBattle: ; unreferenced except in _DEBUG
 	ld [hl], a
 
 	; Give the player a level 20 Rhydon.
-	ld a, RHYDON
+	ld a, HITMONTOP
 	ld [wCurPartySpecies], a
-	ld a, 20
+	ld a, 50
+	ld [wCurEnemyLevel], a
+	xor a
+	ld [wMonDataLocation], a
+	ld [wCurMap], a
+	call AddPartyMon
+	ld a, BLISSEY
+	ld [wCurPartySpecies], a
+	ld a, 50
 	ld [wCurEnemyLevel], a
 	xor a
 	ld [wMonDataLocation], a
 	ld [wCurMap], a
 	call AddPartyMon
 
+	; This function gives you a way to waste a turn, never know when you'll need it.
+	; Alternatively, add a move to test.
+	; ld hl, wPartyMon1Moves
+	; ld a, SPLASH
+	; ld [hli], a
+
 	; Fight against a level 20 Rhydon.
-	ld a, RHYDON
+	ld a, BLISSEY
 	ld [wCurOpponent], a
+	ld a, 50 ; Set the level you want here.
+	ld [wCurEnemyLevel], a
 
 	predef InitOpponent
 

@@ -170,7 +170,16 @@
 	const SUPER_FANG   ; a2
 	const SLASH        ; a3
 	const SUBSTITUTE   ; a4
-	const STRUGGLE     ; a5
+	const METAL_CLAW   ; a5
+	const XSCISSOR     ; a6
+	const MOONBLAST    ; a7
+	const SHADOW_BALL  ; a8
+	const IRON_HEAD    ; a9
+	const DARK_PULSE
+	const DAZZLINGLEAM
+	const IRON_TAIL
+	const DRAGON_PULSE
+	const STRUGGLE
 DEF NUM_ATTACKS EQU const_value - 1
 
 DEF CANNOT_MOVE EQU $ff

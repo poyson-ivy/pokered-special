@@ -19,7 +19,7 @@ _PewterGymBrockWaitTakeThisText::
 
 _PewterGymReceivedTM34Text::
 	text "<PLAYER> received"
-	line "TM34!@"
+	line "TM51!@"
 	text_end
 
 _TM34ExplanationText::
@@ -30,20 +30,12 @@ _TM34ExplanationText::
 	cont "can be taught to"
 	cont "#MON!"
 
-	para "A TM is good only"
-	line "once! So when you"
-	cont "use one to teach"
-	cont "a new technique,"
-	cont "pick the #MON"
-	cont "carefully!"
-
-	para "TM34 contains"
-	line "BIDE!"
+	para "TM51 contains"
+	line "ROCK THROW!"
 
 	para "Your #MON will"
-	line "absorb damage in"
-	cont "battle then pay"
-	cont "it back double!"
+	line "hurl a rock at"
+	cont "the foe!"
 	done
 
 _PewterGymTM34NoRoomText::

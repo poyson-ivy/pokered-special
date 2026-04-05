@@ -65,3 +65,48 @@ _CeladonMansion3FDevRoomSignText::
 	text "GAME FREAK"
 	line "Development Room"
 	done
+
+_LilyBeforeBattleText::
+	text "LILY: hi"
+
+	para "im the sole dev"
+	line "of this hack"
+
+	para "from the bottom"
+	line "of my heart,"
+	cont "thank you for"
+	cont "playing."
+
+	para "we should like."
+	line "totally battle"
+	done
+
+_LilyChallengeBattleText::
+	text "coolio"
+	done
+
+_LilyRefusedBattleText::
+	text "aw"
+	done
+
+_LilyDefeatedText::
+	text "damn"
+	prompt
+
+_LilyPostBattleText::
+	text "that was fun"
+
+	para "u should go and"
+	line "complete the dex"
+	cont "if u havent"
+
+	para "coding in most of"
+	line "the new mons was"
+	cont "a pain in the ass"
+
+	para "again, thanks for"
+	line "playing. it means"
+	cont "a lot to me"
+
+	para "smell ya later"
+	done

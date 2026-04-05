@@ -586,6 +586,17 @@ LoadTownMapEntry:
 	ld l, a
 	ret
 
+GetMapName::
+	ld a, e
+	ld de, wNameBuffer ; LoadTownMapEntry write in [de].
+                          ; To avoid any issues that could arise from a random write in a random place 
+                          ; we point DE at an armless address that we are going to overwrite anyway.
+	call LoadTownMapEntry
+	ld de, wNameBuffer
+	ld bc, NAME_BUFFER_LENGTH
+	call CopyData
+	ret
+
 INCLUDE "data/maps/town_map_entries.asm"
 
 INCLUDE "data/maps/names.asm"

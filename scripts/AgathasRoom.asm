@@ -27,7 +27,9 @@ AgathaShowOrHideExitBlock:
 
 ResetAgathaScript:
 	xor a ; SCRIPT_AGATHASROOM_DEFAULT
+	ld [wJoyIgnore], a
 	ld [wAgathasRoomCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 AgathasRoom_ScriptPointers:
@@ -37,6 +39,7 @@ AgathasRoom_ScriptPointers:
 	dw_const AgathasRoomAgathaEndBattleScript,      SCRIPT_AGATHASROOM_AGATHA_END_BATTLE
 	dw_const AgathasRoomPlayerIsMovingScript,       SCRIPT_AGATHASROOM_PLAYER_IS_MOVING
 	dw_const AgathasRoomNoopScript,                 SCRIPT_AGATHASROOM_NOOP
+	dw_const AgathasRoomAgathaRematchEndBattleScript, SCRIPT_AGATHASROOM_AGATHA_REMATCH_END_BATTLE
 
 AgathasRoomNoopScript:
 	ret
@@ -76,7 +79,7 @@ AgathasRoomDefaultScript:
 .stopPlayerFromLeaving
 	ld a, TEXT_AGATHASROOM_AGATHA_DONT_RUN_AWAY
 	ldh [hTextID], a
-	call DisplayTextID
+	call DisplayTextID  ; "Don't run away!"
 	ld a, PAD_UP
 	ld [wSimulatedJoypadStatesEnd], a
 	ld a, $1
@@ -117,6 +120,27 @@ AgathasRoomAgathaEndBattleScript:
 	ld [wChampionsRoomCurScript], a
 	ret
 
+AgathasRoomAgathaRematchEndBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, ResetAgathaScript
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_AGATHAS_ROOM_TRAINER_0
+
+	; Visually update the door tile
+	ld a, $e
+	ld [wNewTileBlockID], a
+	lb bc, 0, 2
+	predef ReplaceTileBlock
+
+	ld a, TEXT_AGATHASROOM_AGATHA
+	ldh [hTextID], a
+	call DisplayTextID
+	ld a, SCRIPT_CHAMPIONSROOM_PLAYER_ENTERS
+	ld [wChampionsRoomCurScript], a
+	jp ResetAgathaScript
+
 AgathasRoom_TextPointers:
 	def_text_pointers
 	dw_const AgathasRoomAgathaText,            TEXT_AGATHASROOM_AGATHA
@@ -130,8 +154,44 @@ AgathasRoomTrainerHeader0:
 
 AgathasRoomAgathaText:
 	text_asm
+	CheckEvent EVENT_BEAT_AGATHAS_ROOM_TRAINER_0
+	jr nz, .afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematch
+
+	; --- Normal Battle ---
 	ld hl, AgathasRoomTrainerHeader0
 	call TalkToTrainer
+	jp TextScriptEnd
+
+.rematch
+	; --- Rematch Battle ---
+	ld hl, AgathasRoomAgathaRematchPreBattleText
+	call PrintText
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld hl, AgathasRoomAgathaRematchDefeatedText
+	ld de, AgathasRoomAgathaRematchDefeatedText
+	call SaveEndBattleTextPointers
+	ld a, OPP_AGATHA
+	ld [wCurOpponent], a
+	ld a, 2 ; Roster 2
+	ld [wTrainerNo], a
+	ld a, SCRIPT_AGATHASROOM_AGATHA_REMATCH_END_BATTLE
+	ld [wAgathasRoomCurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematchAfter
+	ld hl, AgathaAfterBattleText
+	call PrintText
+	jp TextScriptEnd
+.rematchAfter
+	ld hl, AgathasRoomAgathaRematchAfterBattleText
+	call PrintText
 	jp TextScriptEnd
 
 AgathaBeforeBattleText:
@@ -148,4 +208,16 @@ AgathaAfterBattleText:
 
 AgathasRoomAgathaDontRunAwayText:
 	text_far _AgathasRoomAgathaDontRunAwayText
+	text_end
+
+AgathasRoomAgathaRematchPreBattleText:
+	text_far _AgathasRoomAgathaRematchPreBattleText
+	text_end
+
+AgathasRoomAgathaRematchDefeatedText:
+	text_far _AgathasRoomAgathaRematchDefeatedText
+	text_end
+
+AgathasRoomAgathaRematchAfterBattleText:
+	text_far _AgathasRoomAgathaRematchAfterBattleText
 	text_end

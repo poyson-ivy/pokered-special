@@ -218,3 +218,43 @@ _CeladonGymAfterBattleText8::
 	para "Wait 'til next"
 	line "time!"
 	done
+
+_CeladonGymRematchPreBattleText::
+	text "I heard of your"
+	line "accomplishment."
+	cont "Congrats on"
+	cont "becoming CHAMP."
+
+	para "However, I do"
+	line "want to see"
+	cont "your new skills"
+	cont "for myself..."
+
+	para "Care for a"
+	line "rematch?"
+	done
+
+_CeladonGymRematchAcceptedText::
+	text "Very well."
+	done
+
+_CeladonGymRematchRefusedText::
+	text "Maybe some other"
+	line "time."
+	done
+
+_CeladonGymRematchDefeatedText::
+	text "I'm appauled!"
+	prompt
+
+_CeladonGymRematchPostBattleText::
+	text "I see now how"
+	line "you've come"
+	cont "as far as you"
+	cont "have."
+
+	para "May the rest of"
+	line "your travels be"
+	cont "full of good"
+	cont "things."
+	done

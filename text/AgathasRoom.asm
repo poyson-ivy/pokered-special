@@ -42,3 +42,31 @@ _AgathasRoomAgathaDontRunAwayText::
 	text "Someone's voice:"
 	line "Don't run away!"
 	done
+
+_AgathasRoomAgathaRematchPreBattleText::
+	text "I am AGATHA of"
+	line "the ELITE FOUR!"
+
+	para "OAK's praise of"
+	line "you was warranted,"
+	cont "but I refuse to be"
+	cont "beaten down just"
+	cont "once by that old"
+	cont "duff's goon!"
+
+	para "<PLAYER>! I'll show"
+	line "you how a real"
+	cont "trainer fights!"
+	done
+
+_AgathasRoomAgathaRematchDefeatedText::
+	text "Oh ho!"
+	line "You're something"
+	cont "special, child!"
+	prompt
+
+_AgathasRoomAgathaRematchAfterBattleText::
+	text "I have nothing"
+	line "else to say! Run"
+	cont "along now, child!"
+	done

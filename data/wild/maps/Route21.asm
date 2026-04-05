@@ -9,7 +9,7 @@ Route21WildMons:
 	db 32, PIDGEOTTO
 	db 28, TANGELA
 	db 30, TANGELA
-	db 32, TANGELA
+	db 32, PINSIR
 	end_grass_wildmons
 
 	def_water_wildmons 5 ; encounter rate

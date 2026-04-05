@@ -4,7 +4,7 @@ VictoryRoad3FWildMons:
 	db 26, GEODUDE
 	db 22, ZUBAT
 	db 42, ONIX
-	db 40, VENOMOTH
+	db 40, HITMONTOP
 	db 45, ONIX
 	db 43, GRAVELER
 	db 41, GOLBAT

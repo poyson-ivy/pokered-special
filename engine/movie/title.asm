@@ -124,7 +124,7 @@ DisplayTitleScreen:
 	call EnableLCD
 
 IF DEF(_RED)
-	ld a, STARTER1 ; which Pokemon to show first on the title screen
+	ld a, CHARIZARD ; which Pokemon to show first on the title screen
 ENDC
 IF DEF(_BLUE)
 	ld a, STARTER2 ; which Pokemon to show first on the title screen
@@ -411,7 +411,7 @@ IF DEF(_BLUE)
 ENDC
 
 DebugNewGamePlayerName:
-	db "NINTEN@"
+	db "LILY@"
 
 DebugNewGameRivalName:
-	db "SONY@"
+	db "BLUE@"

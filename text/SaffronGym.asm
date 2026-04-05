@@ -237,3 +237,43 @@ _SaffronGymYoungster4AfterBattleText::
 	line "used telepathy to"
 	cont "read your mind!"
 	done
+
+_SaffronGymRematchPreBattleText::
+	text "I had another"
+	line "vision of"
+	cont "your return!"
+
+	para "I've grown more"
+	line "accustomed to"
+	cont "fighting, so I"
+	cont "would like to"
+	cont "fight you once"
+	cont "more!"
+	done
+
+_SaffronGymRematchAcceptedText::
+	text "Let's begin!"
+	done
+
+_SaffronGymRematchRefusedText::
+	text "I see."
+
+	para "Maybe another"
+	line "time!"
+	done
+
+_SaffronGymRematchDefeatedText::
+	text "You never"
+	line "cease to"
+	cont "shock me..."
+	prompt
+
+_SaffronGymRematchPostBattleText::
+	text "Battling you"
+	line "makes me feel"
+	cont "more alive than"
+	cont "ever before!"
+
+	para "Let's do this"
+	line "again some time!"
+	done

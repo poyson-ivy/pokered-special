@@ -165,6 +165,15 @@ MoveSoundTable:
 	db SFX_BATTLE_26,          $f0, $ff ; SUPER_FANG
 	db SFX_NOT_VERY_EFFECTIVE, $01, $ff ; SLASH
 	db SFX_BATTLE_2C,          $d8, $04 ; SUBSTITUTE
+	db SFX_DAMAGE,             $00, $80 ; METAL_CLAW
+	db SFX_NOT_VERY_EFFECTIVE, $00, $a0 ; X-SCISSOR
+	db SFX_BATTLE_36,          $00, $80 ; MOONBLAST
+	db SFX_BATTLE_34,          $00, $40 ; SHADOW_BALL
+	db SFX_BATTLE_26,          $1e, $20 ; IRON_HEAD
+	db SFX_BATTLE_0D,          $f0, $ff ; DARK_PULSE
+	db SFX_BATTLE_2B,          $1f, $60 ; DAZZLINGLEAM
+	db SFX_BATTLE_26,          $f0, $ff ; IRON_TAIL
+	db SFX_BATTLE_29,          $f0, $80 ; DRAGON_PULSE
 	db SFX_BATTLE_0B,          $00, $80 ; STRUGGLE
 	assert_table_length NUM_ATTACKS
 	db SFX_BATTLE_0B,          $00, $80

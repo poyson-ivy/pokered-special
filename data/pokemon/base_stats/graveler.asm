@@ -18,7 +18,8 @@
 	     SUBMISSION,   COUNTER,      SEISMIC_TOSS, RAGE,         EARTHQUAKE,   \
 	     FISSURE,      DIG,          MIMIC,        DOUBLE_TEAM,  BIDE,         \
 	     METRONOME,    SELFDESTRUCT, FIRE_BLAST,   REST,         EXPLOSION,    \
-	     ROCK_SLIDE,   SUBSTITUTE,   STRENGTH
+	     ROCK_SLIDE,   SUBSTITUTE,   STRENGTH,     ROCK_THROW
 	; end
 
-	db 0 ; padding
+	db BANK(GravelerPicFront)
+	assert BANK(GravelerPicFront) == BANK(GravelerPicBack)

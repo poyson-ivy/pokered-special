@@ -584,6 +584,8 @@ OaksLabOakGivesPokedexScript:
 	ld a, TOGGLE_POKEDEX_2
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	lb bc, EXP_ALL, 1
+	call GiveItem
 	call OaksLabRivalFaceUpOakFaceDownScript
 	ld a, TEXT_OAKSLAB_OAK_THAT_WAS_MY_DREAM
 	ldh [hTextID], a

@@ -17,18 +17,12 @@ DebugNewGameParty: ; unreferenced except in _DEBUG
 	; "Tsunekazu Ishihara: Exeggutor is my favorite. That's because I was
 	; always using this character while I was debugging the program."
 	; From https://web.archive.org/web/20000607152840/http://pocket.ign.com/news/14973.html
-	db EXEGGUTOR, 90
-IF DEF(_DEBUG)
-	db MEW, 5
-ELSE
-	db MEW, 20
-ENDC
-	db JOLTEON, 56
-	db DUGTRIO, 56
-	db ARTICUNO, 57
-IF DEF(_DEBUG)
-	db PIKACHU, 5
-ENDC
+	db ZAPDOS, 100
+	db SCIZOR, 100
+	db MEWTWO, 100
+	db DRAGONITE, 100
+	db GYARADOS, 100
+	db VENUSAUR, 100
 	db -1 ; end
 
 PrepareNewGameDebug: ; dummy except in _DEBUG
@@ -47,47 +41,64 @@ IF DEF(_DEBUG)
 
 	call SetDebugNewGameParty
 
-	; Exeggutor gets four HM moves.
 	ld hl, wPartyMon1Moves
+	ld a, THUNDERSHOCK
+	ld [hli], a
+	ld a, THUNDERBOLT
+	ld [hli], a
+	ld a, THUNDER
+	ld [hli], a
 	ld a, FLY
+	ld [hl], a
+
+	ld hl, wPartyMon2Moves
+	ld a, XSCISSOR
 	ld [hli], a
-	ld a, CUT
+	ld a, SLASH
 	ld [hli], a
-	ld a, SURF
+	ld a, WING_ATTACK
+	ld [hli], a
+	ld a, SWORDS_DANCE
+	ld [hl], a
+
+	ld hl, wPartyMon3Moves
+	ld a, PSYBEAM
+	ld [hli], a
+	ld a, PSYCHIC_M
+	ld [hli], a
+	ld a, SHADOW_BALL
+	ld [hli], a
+	ld a, BODY_SLAM
+	ld [hl], a
+
+	ld hl, wPartyMon4Moves
+	ld a, DRAGON_PULSE
+	ld [hli], a
+	ld a, THUNDERBOLT
+	ld [hli], a
+	ld a, ICE_BEAM
 	ld [hli], a
 	ld a, STRENGTH
 	ld [hl], a
-	ld hl, wPartyMon1PP
-	ld a, 15
-	ld [hli], a
-	ld a, 30
-	ld [hli], a
-	ld a, 15
-	ld [hli], a
-	ld [hl], a
 
-	; Jolteon gets Thunderbolt.
-	ld hl, wPartyMon3Moves + 3
-	ld a, THUNDERBOLT
-	ld [hl], a
-	ld hl, wPartyMon3PP + 3
-	ld a, 15
-	ld [hl], a
-
-	; Articuno gets Fly.
 	ld hl, wPartyMon5Moves
-	ld a, FLY
-	ld [hl], a
-	ld hl, wPartyMon5PP
-	ld a, 15
+	ld a, SURF
+	ld [hli], a
+	ld a, DRAGON_PULSE
+	ld [hli], a
+	ld a, BITE
+	ld [hli], a
+	ld a, ICE_BEAM
 	ld [hl], a
 
-	; Pikachu gets Surf.
-	ld hl, wPartyMon6Moves + 2
-	ld a, SURF
-	ld [hl], a
-	ld hl, wPartyMon6PP + 2
-	ld a, 15
+	ld hl, wPartyMon6Moves
+	ld a, RAZOR_LEAF
+	ld [hli], a
+	ld a, MEGA_DRAIN
+	ld [hli], a
+	ld a, CUT
+	ld [hli], a
+	ld a, SLEEP_POWDER
 	ld [hl], a
 
 	; Get some debug items.
@@ -138,6 +149,8 @@ DebugSetPokedexEntries:
 DebugNewGameItemsList:
 	db BICYCLE, 1
 	db FULL_RESTORE, 99
+	db MAX_REVIVE, 99
+	db MAX_ELIXER, 99
 	db FULL_HEAL, 99
 	db ESCAPE_ROPE, 99
 	db RARE_CANDY, 99

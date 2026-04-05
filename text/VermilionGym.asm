@@ -19,3 +19,34 @@ _VermilionGymLTSurgePreBattleText::
 	para "The same as I'll"
 	line "do to you!"
 	done
+
+_VermilionGymRematchPreBattleText::
+	text "Look who came"
+	line "crawlin' back!"
+
+	para "Need me to shock"
+	line "some sense into"
+	cont "you again?"
+	done
+
+_VermilionGymRematchAcceptedText::
+	text "Will do!"
+	done
+
+_VermilionGymRematchRefusedText::
+	text "Scared? I get it."
+	done
+
+_VermilionGymRematchDefeatedText::
+	text "All that training"
+	line "for nothin'!"
+	prompt
+
+_VermilionGymRematchPostBattleText::
+	text "I guess I was"
+	line "wrong about ya,"
+	cont "kid."
+
+	para "You're still the"
+	line "real deal!"
+	done

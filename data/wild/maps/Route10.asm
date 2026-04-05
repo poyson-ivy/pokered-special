@@ -6,7 +6,7 @@ Route10WildMons:
 IF DEF(_RED)
 	db 11, EKANS
 	db 13, SPEAROW
-	db 15, EKANS
+	db 15, SANDSHREW
 	db 17, VOLTORB
 	db 17, SPEAROW
 	db 13, EKANS

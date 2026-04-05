@@ -42,6 +42,12 @@ CeladonGymErikaPostBattleScript:
 	jp z, CeladonGymResetScripts
 	ld a, PAD_CTRL_PAD
 	ld [wJoyIgnore], a
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jp z, CeladonGymReceiveTM21	
+	ld a, TEXT_CELADONGYM_REMATCH_POST_BATTLE
+	ldh [hTextID], a
+	call DisplayTextID
+	jp CeladonGymResetScripts
 
 CeladonGymReceiveTM21:
 	ld a, TEXT_CELADONGYM_RAINBOWBADGE_INFO
@@ -84,6 +90,7 @@ CeladonGym_TextPointers:
 	dw_const CeladonGymRainbowBadgeInfoText, TEXT_CELADONGYM_RAINBOWBADGE_INFO
 	dw_const CeladonGymReceivedTM21Text,     TEXT_CELADONGYM_RECEIVED_TM21
 	dw_const CeladonGymTM21NoRoomText,       TEXT_CELADONGYM_TM21_NO_ROOM
+	dw_const CeladonGymRematchPostBattleText,TEXT_CELADONGYM_REMATCH_POST_BATTLE
 
 CeladonGymTrainerHeaders:
 	def_trainers 2
@@ -113,6 +120,8 @@ CeladonGymErikaText:
 	call DisableWaitingAfterTextDisplay
 	jr .done
 .afterBeat
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .ErikaRematch
 	ld hl, .PostBattleAdviceText
 	call PrintText
 	jr .done
@@ -131,6 +140,33 @@ CeladonGymErikaText:
 	call InitBattleEnemyParameters
 	ld a, $4
 	ld [wGymLeaderNo], a
+	jr .endBattle
+.ErikaRematch
+	ld hl, .PreBattleRematchText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .refused
+	ld hl, .PreBattleRematchAcceptedText
+	call PrintText
+	call Delay3
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld hl, CeladonGymRematchDefeatedText
+	ld de, CeladonGymRematchDefeatedText
+	call SaveEndBattleTextPointers
+	ld a, OPP_ERIKA
+	ld [wCurOpponent], a
+	ld a, 2
+	ld [wTrainerNo], a
+	jr .endBattle
+.refused
+	ld hl, .PreBattleRematchRefusedText
+	call PrintText
+	jr .done
+.endBattle
 	ld a, SCRIPT_CELADONGYM_ERIKA_POST_BATTLE
 	ld [wCeladonGymCurScript], a
 	ld [wCurMapScript], a
@@ -141,12 +177,32 @@ CeladonGymErikaText:
 	text_far _CeladonGymErikaPreBattleText
 	text_end
 
+.PostBattleAdviceText:
+	text_far _CeladonGymErikaPostBattleAdviceText
+	text_end
+
 .ReceivedRainbowBadgeText:
 	text_far _CeladonGymErikaReceivedRainbowBadgeText
 	text_end
 
-.PostBattleAdviceText:
-	text_far _CeladonGymErikaPostBattleAdviceText
+.PreBattleRematchText:
+	text_far _CeladonGymRematchPreBattleText
+	text_end
+	
+.PreBattleRematchAcceptedText:
+	text_far _CeladonGymRematchAcceptedText
+	text_end
+	
+.PreBattleRematchRefusedText:
+	text_far _CeladonGymRematchRefusedText
+	text_end
+
+CeladonGymRematchDefeatedText:
+	text_far _CeladonGymRematchDefeatedText
+	text_end
+
+CeladonGymRematchPostBattleText:
+	text_far _CeladonGymRematchPostBattleText
 	text_end
 
 CeladonGymRainbowBadgeInfoText:

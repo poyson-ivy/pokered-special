@@ -210,3 +210,45 @@ _CinnabarGymGymGuideBeatBlaineText::
 	text "<PLAYER>! You beat"
 	line "that fire brand!"
 	done
+
+_CinnabarGymRematchPreBattleText::
+	text "Hah!"
+
+	para "I knew you'd"
+	line "return! My"
+	cont "skill is simply"
+	cont "mesmerizing!"
+
+	para "Maybe another"
+	line "battle with"
+	cont "support that"
+	cont "even more!"
+	done
+
+_CinnabarGymRematchAcceptedText::
+	text "Hah!"
+	line "I hope you"
+	cont "still have a"
+	cont "BURN HEAL!"
+	done
+
+_CinnabarGymRematchRefusedText::
+	text "...I see!"
+
+	para "Come back when"
+	line "you're ready for"
+	cont "more expertise!"
+	done
+
+_CinnabarGymRematchDefeatedText::
+	text "I've been"
+	line "snuffed out!"
+	prompt
+
+_CinnabarGymRematchPostBattleText::
+	text "Hah!"
+
+	para "You're reaching"
+	line "my level of"
+	cont "skill!"
+	done

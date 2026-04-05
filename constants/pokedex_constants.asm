@@ -155,5 +155,27 @@
 	const DEX_DRAGONITE  ; 149
 	const DEX_MEWTWO     ; 150
 	const DEX_MEW        ; 151
+	const DEX_ESPEON     ; 152
+	const DEX_UMBREON    ; 153
+	const DEX_MAGNEZONE  ; 154
+	const DEX_LEAFEON    ; 155
+	const DEX_RHYPERIOR  ; 156
+	const DEX_GLACEON    ; 157
+	const DEX_MAGMORTAR  ; 158
+	const DEX_ELECTIVIRE ; 159
+	const DEX_LICKILICKY ; 160
+	const DEX_TANGROWTH  ; 161
+	const DEX_BELLOSSOM  ; 162
+	const DEX_POLITOED   ; 163
+	const DEX_SLOWKING   ; 164
+	const DEX_STEELIX    ; 165
+	const DEX_SCIZOR     ; 166
+	const DEX_KINGDRA    ; 167
+	const DEX_PORYGON2   ; 168
+	const DEX_BLISSEY    ; 169
+	const DEX_PORYGONZ   ; 170
+	const DEX_SYLVEON    ; 171
+	const DEX_CROBAT     ; 172
+	const DEX_HITMONTOP  ; 173
 
 DEF NUM_POKEMON EQU const_value - 1

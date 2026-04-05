@@ -99,6 +99,16 @@ HallOfFameOakCongratulationsScript:
 	ld a, TOGGLE_CERULEAN_CAVE_GUY
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	ld a, TOGGLE_POKEMON_MANSION_B1F_MEW
+	ld [wToggleableObjectIndex], a
+	predef ShowObject
+	ld a, TOGGLE_VICTORY_ROAD_3F_OAK
+	ld [wToggleableObjectIndex], a
+	predef ShowObject
+	ld a, TOGGLE_CELADON_MANSION_3F_LILY
+	ld [wToggleableObjectIndex], a
+	predef ShowObject
+	SetEvent EVENT_PLAYER_IS_CHAMPION
 	ld a, SCRIPT_HALLOFFAME_RESET_EVENTS_AND_SAVE
 	ld [wHallOfFameCurScript], a
 	ret

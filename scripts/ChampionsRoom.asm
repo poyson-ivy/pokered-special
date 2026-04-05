@@ -82,6 +82,15 @@ ChampionsRoomRivalReadyToBattleScript:
 .NotStarter3
 	ld a, $3
 .saveTrainerId
+	push af
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr z, .firstBattle
+	pop af
+	add 3 ; Shifts team to Roster 4, 5, or 6 for the rematch
+	jr .setTeam
+.firstBattle
+	pop af
+.setTeam
 	ld [wTrainerNo], a
 
 	xor a

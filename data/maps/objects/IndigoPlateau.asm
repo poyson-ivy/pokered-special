@@ -1,3 +1,5 @@
+	object_const_def
+
 IndigoPlateau_Object:
 	db $e ; border block
 

@@ -446,10 +446,7 @@ wAILayer2Encouragement:: db
 wPlayerSubstituteHP:: db
 wEnemySubstituteHP:: db
 
-; used for TestBattle (unused in non-debug builds)
-wTestBattlePlayerSelectedMove:: db
-
-	ds 1
+	ds 2
 
 ; 0=regular, 1=mimic, 2=above message box (relearn, heal pp..)
 wMoveMenuType:: db
@@ -1543,7 +1540,7 @@ wMonHBackSprite:: dw
 wMonHMoves:: ds NUM_MOVES
 wMonHGrowthRate:: db
 wMonHLearnset:: flag_array NUM_TMS + NUM_HMS
-	ds 1
+wMonHPicBank:: db
 wMonHeaderEnd::
 
 ; saved at the start of a battle and then written back at the end of the battle
@@ -1756,9 +1753,7 @@ wPokedexOwnedEnd::
 wPokedexSeen:: flag_array NUM_POKEMON
 wPokedexSeenEnd::
 
-wNumBagItems:: db
-; item, quantity
-wBagItems:: ds BAG_ITEM_CAPACITY * 2 + 1
+ds 42
 
 wPlayerMoney:: ds 3 ; BCD
 
@@ -1833,7 +1828,19 @@ wWarpEntries:: ds MAX_WARP_EVENTS * 4 ; Y, X, warp ID, map ID
 ; if $ff, the player's coordinates are not updated when entering the map
 wDestinationWarpID:: db
 
+	;;;;;;;;; note: CHANGED: this empty space is now used for bigger bag space
+	UNION
+	; original size of this empty space
 	ds 128
+
+	NEXTU
+	wNumBagItems:: db
+	; item, quantity
+       wBagItems:: ds BAG_ITEM_CAPACITY * 2 + 1 ; now holds 50 items
+       ;;;;
+       ; 26 bytes left to use
+       ENDU
+       ;;;;;;;;;;
 
 ; number of signs in the current map (up to MAX_BG_EVENTS)
 wNumSigns:: db
@@ -2041,6 +2048,8 @@ wRoute23CurScript:: db
 wSeafoamIslandsB4FCurScript:: db
 wRoute18Gate1FCurScript:: db
 	ds 78
+wCeladonMansion3FCurScript:: db
+	ds 1
 wGameProgressFlagsEnd::
 
 	ds 56
@@ -2188,7 +2197,11 @@ ENDU
 
 wTrainerHeaderPtr:: dw
 
-	ds 6
+;	ds 6
+
+wCutTrees::
+; Check CutTreeLocations for the indexes
+	ds 3
 
 ; the trainer the player must face after getting a wrong answer in the Cinnabar
 ; gym quiz
@@ -2198,7 +2211,7 @@ wOpponentAfterWrongAnswer:: db
 ; mostly copied from map-specific map script pointer and written back later
 wCurMapScript:: db
 
-	ds 7
+;	ds 7
 
 wPlayTimeHours:: db
 wPlayTimeMaxed:: db
@@ -2250,6 +2263,12 @@ ENDR
 wBoxMonNicksEnd::
 
 wBoxDataEnd::
+
+wEXPBarPixelLength::  ds 1
+wEXPBarBaseEXP::      ds 3
+wEXPBarCurEXP::       ds 3
+wEXPBarNeededEXP::    ds 3
+wEXPBarKeepFullFlag:: ds 1
 
 
 SECTION "Stack", WRAM0

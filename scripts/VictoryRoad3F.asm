@@ -20,11 +20,18 @@ VictoryRoad3FCheckBoulderEventScript:
 	lb bc, 5, 3
 	predef_jump ReplaceTileBlock
 
+VictoryRoad3FResetScripts:
+	xor a
+	ld [wJoyIgnore], a
+	ld [wVictoryRoad3FCurScript], a
+	ret
+
 VictoryRoad3F_ScriptPointers:
 	def_script_pointers
 	dw_const VictoryRoad3FDefaultScript,            SCRIPT_VICTORYROAD3F_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_VICTORYROAD3F_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_VICTORYROAD3F_END_BATTLE
+	dw_const VictoryRoad3FOakPostBattle,            SCRIPT_VICTORYROAD3F_OAK_POST_BATTLE
 
 VictoryRoad3FDefaultScript:
 	ld hl, wMiscFlags
@@ -75,6 +82,27 @@ VictoryRoad3FDefaultScript:
 	jp z, CheckFightingMapTrainers
 	ret
 
+VictoryRoad3FOakPostBattle:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, VictoryRoad3FResetScripts
+	
+	; Set victory flag and reset script state FIRST to prevent loops
+	SetEvent EVENT_BEAT_OAK
+	xor a
+	ld [wVictoryRoad3FCurScript], a
+	ld [wCurMapScript], a
+	
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld a, TEXT_VICTORYROAD3F_OAK_POST_BATTLE
+	ldh [hTextID], a
+	call DisplayTextID
+	
+	xor a
+	ld [wJoyIgnore], a
+	ret
+
 VictoryRoad3F_TextPointers:
 	def_text_pointers
 	dw_const VictoryRoad3FCooltrainerM1Text, TEXT_VICTORYROAD3F_COOLTRAINER_M1
@@ -87,6 +115,8 @@ VictoryRoad3F_TextPointers:
 	dw_const BoulderText,                    TEXT_VICTORYROAD3F_BOULDER2
 	dw_const BoulderText,                    TEXT_VICTORYROAD3F_BOULDER3
 	dw_const BoulderText,                    TEXT_VICTORYROAD3F_BOULDER4
+	dw_const VictoryRoad3FOakText,           TEXT_VICTORYROAD3F_OAK
+	dw_const VictoryRoad3FOakPostBattleText, TEXT_VICTORYROAD3F_OAK_POST_BATTLE
 
 VictoryRoad3TrainerHeaders:
 	def_trainers
@@ -98,6 +128,8 @@ VictoryRoad3TrainerHeader2:
 	trainer EVENT_BEAT_VICTORY_ROAD_3_TRAINER_2, 4, VictoryRoad3FCooltrainerM2BattleText, VictoryRoad3FCooltrainerM2EndBattleText, VictoryRoad3FCooltrainerM2AfterBattleText
 VictoryRoad3TrainerHeader3:
 	trainer EVENT_BEAT_VICTORY_ROAD_3_TRAINER_3, 4, VictoryRoad3FCooltrainerF2BattleText, VictoryRoad3FCooltrainerF2EndBattleText, VictoryRoad3FCooltrainerF2AfterBattleText
+VictoryRoad3FTrainerHeader4:
+	trainer EVENT_BEAT_OAK, 0, OakRealChallengeBattleText, OakDefeatedText, OakPostBattleText
 	db -1 ; end
 
 VictoryRoad3FCooltrainerM1Text:
@@ -170,4 +202,78 @@ VictoryRoad3FCooltrainerF2EndBattleText:
 
 VictoryRoad3FCooltrainerF2AfterBattleText:
 	text_far _VictoryRoad3FCooltrainerF2AfterBattleText
+	text_end
+
+VictoryRoad3FOakText:
+	text_asm
+	CheckEvent EVENT_BEAT_OAK
+	jr nz, .alreadyBeat
+	ld hl, .AskBattleText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined
+
+	ld hl, OakRealChallengeBattleText
+	call PrintText
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld hl, OakDefeatedText
+	ld de, OakDefeatedText
+	call SaveEndBattleTextPointers
+	ld a, OPP_PROF_OAK
+	ld [wEngagedTrainerClass], a
+	ld a, 1
+	ld [wEngagedTrainerSet], a
+	ldh a, [hSpriteIndex]
+	ld [wSpriteIndex], a
+	call InitBattleEnemyParameters
+	ld a, SCRIPT_VICTORYROAD3F_OAK_POST_BATTLE
+	ld [wVictoryRoad3FCurScript], a
+	jp .text_script_end
+
+.declined
+	ld hl, .DeclinedText
+	call PrintText
+	jr .text_script_end
+
+.alreadyBeat
+	ld hl, OakPostBattleText
+	call PrintText
+.text_script_end
+	jp TextScriptEnd
+
+.AskBattleText:
+	text_far _OakBeforeBattleText
+	text_end
+
+.DeclinedText:
+	text_far _OakRefusedBattleText
+	text_end
+	
+VictoryRoad3FOakPostBattleText:
+	text_asm
+	ld hl, OakPostBattleText
+	call PrintText
+	call GBFadeOutToBlack
+	ld a, TOGGLE_VICTORY_ROAD_3F_OAK
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromBlack
+	jp TextScriptEnd
+
+OakPostBattleText:
+	text_far _OakPostBattleText
+	text_end
+
+OakRealChallengeBattleText:
+	text_far _OakRealChallengeBattleText
+	text_end
+
+OakDefeatedText:
+	text_far _OakDefeatedText
 	text_end

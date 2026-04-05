@@ -24,3 +24,39 @@ _FuchsiaGymKogaReceivedSoulBadgeText::
 	para "Here! Take the"
 	line "SOULBADGE!"
 	prompt
+
+_FuchsiaGymRematchPreBattleText::
+	text "Since our last"
+	line "battle, I've"
+	cont "strengthened to"
+	cont "my limits!"
+
+	para "I say that a"
+	line "rematch is in"
+	cont "order!"
+	done
+
+_FuchsiaGymRematchAcceptedText::
+	text "Good choice!"
+	line "Let's battle!"
+	done
+
+_FuchsiaGymRematchRefusedText::
+	text "You may not be"
+	line "ready for me."
+	done
+
+_FuchsiaGymRematchDefeatedText::
+	text "Gah! Beaten"
+	line "by this child"
+	cont "again..."
+	prompt
+
+_FuchsiaGymRematchPostBattleText::
+	text "You're good!"
+
+	para "Maybe you'll"
+	line "become the"
+	cont "next ninja"
+	cont "master!"
+	done

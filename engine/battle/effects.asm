@@ -482,7 +482,16 @@ UpdateStatDone:
 	call nz, Bankswitch
 	pop de
 .notMinimize
+    ldh a, [hWhoseTurn]
+    and a
+    ld a, [wPlayerMovePower]
+    jr z, .gotUsersPower1
+    ld a, [wEnemyMovePower]
+.gotUsersPower1
+    and a ; Skip animation if damage dealing move
+    jr nz, .skipAnimation
 	call PlayCurrentMoveAnimation
+.skipAnimation
 	ld a, [de]
 	cp MINIMIZE
 	jr nz, .applyBadgeBoostsAndStatusPenalties
@@ -546,12 +555,6 @@ StatModifierDownEffect:
 	ld hl, wPlayerMonStatMods
 	ld de, wEnemyMoveEffect
 	ld bc, wPlayerBattleStatus1
-	ld a, [wLinkState]
-	cp LINK_STATE_BATTLING
-	jr z, .statModifierDownEffect
-	call BattleRandom
-	cp 25 percent + 1 ; chance to miss by in regular battle
-	jp c, MoveMissed
 .statModifierDownEffect
 	call CheckTargetSubstitute ; can't hit through substitute
 	jp nz, MoveMissed
@@ -682,6 +685,14 @@ UpdateLoweredStatDone:
 	ld a, [de]
 	cp ATTACK_DOWN_SIDE_EFFECT ; for all side effects, move animation has already played, skip it
 	jr nc, .ApplyBadgeBoostsAndStatusPenalties
+    ldh a, [hWhoseTurn] ; check who is using the move
+    and a
+	ld a, [wPlayerMovePower]
+    jr z, .gotUsersPower2
+    ld a, [wEnemyMovePower]
+.gotUsersPower2
+	and a ; Skip animation if damage dealing move
+	jr nz, .ApplyBadgeBoostsAndStatusPenalties
 	call PlayCurrentMoveAnimation2
 .ApplyBadgeBoostsAndStatusPenalties
 	ldh a, [hWhoseTurn]

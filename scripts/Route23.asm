@@ -26,31 +26,20 @@ Route23_ScriptPointers:
 	dw_const Route23ResetToDefaultScript, SCRIPT_ROUTE23_RESET_TO_DEFAULT
 
 Route23DefaultScript:
-	ld hl, Route23GuardsYCoords
 	ld a, [wYCoord]
-	ld b, a
-	ld e, $0
-	EventFlagBit c, EVENT_PASSED_EARTHBADGE_CHECK + 1, EVENT_PASSED_CASCADEBADGE_CHECK
-.loop
-	ld a, [hli]
-	cp -1
-	ret z
-	inc e
-	dec c
-	cp b
-	jr nz, .loop
-	cp 35
-	jr nz, .not_past_victory_road
+	cp 35 ; Only check for the EarthBadge guard's Y-coordinate
+	ret nz
 	ld a, [wXCoord]
 	cp 14
 	ret nc
-.not_past_victory_road
-	ld a, e
+	
+	ld a, 1 ; Assuming the Earthbadge guard is sprite index 1
 	ldh [hSpriteIndex], a
-	ld a, c
+	ld a, 6 ; EarthBadge is badge index 6 relative to Cascade (0)
 	ld [wWhichBadge], a
 	ld b, FLAG_TEST
-	EventFlagAddress hl, EVENT_PASSED_CASCADEBADGE_CHECK
+	ld c, EVENT_PASSED_EARTHBADGE_CHECK
+	ld hl, wEventFlags
 	predef FlagActionPredef
 	ld a, c
 	and a
@@ -61,26 +50,8 @@ Route23DefaultScript:
 	ldh [hJoyHeld], a
 	ret
 
-Route23GuardsYCoords:
-	db 35
-	db 56
-	db 85
-	db 96
-	db 105
-	db 119
-	db 136
-	db -1 ; end
-
 Route23CopyBadgeTextScript:
-	ld hl, BadgeTextPointers
-	ld a, [wWhichBadge]
-	ld c, a
-	ld b, 0
-	add hl, bc
-	add hl, bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
+	ld hl, EarthBadgeText
 	ld de, wNameBuffer
 .copyTextLoop
 	ld a, [hli]
@@ -90,35 +61,8 @@ Route23CopyBadgeTextScript:
 	jr nz, .copyTextLoop
 	ret
 
-BadgeTextPointers:
-	dw CascadeBadgeText
-	dw ThunderBadgeText
-	dw RainbowBadgeText
-	dw SoulBadgeText
-	dw MarshBadgeText
-	dw VolcanoBadgeText
-	dw EarthBadgeText
-
 EarthBadgeText:
 	db "EARTHBADGE@"
-
-VolcanoBadgeText:
-	db "VOLCANOBADGE@"
-
-MarshBadgeText:
-	db "MARSHBADGE@"
-
-SoulBadgeText:
-	db "SOULBADGE@"
-
-RainbowBadgeText:
-	db "RAINBOWBADGE@"
-
-ThunderBadgeText:
-	db "THUNDERBADGE@"
-
-CascadeBadgeText:
-	db "CASCADEBADGE@"
 
 Route23MovePlayerDownScript:
 	ld a, $1
@@ -142,53 +86,11 @@ Route23ResetToDefaultScript:
 Route23_TextPointers:
 	def_text_pointers
 	dw_const Route23Guard1Text,              TEXT_ROUTE23_GUARD1
-	dw_const Route23Guard2Text,              TEXT_ROUTE23_GUARD2
-	dw_const Route23Swimmer1Text,            TEXT_ROUTE23_SWIMMER1
-	dw_const Route23Swimmer2Text,            TEXT_ROUTE23_SWIMMER2
-	dw_const Route23Guard3Text,              TEXT_ROUTE23_GUARD3
-	dw_const Route23Guard4Text,              TEXT_ROUTE23_GUARD4
-	dw_const Route23Guard5Text,              TEXT_ROUTE23_GUARD5
 	dw_const Route23VictoryRoadGateSignText, TEXT_ROUTE23_VICTORY_ROAD_GATE_SIGN
 
 Route23Guard1Text:
 	text_asm
-	EventFlagBit a, EVENT_PASSED_EARTHBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Guard2Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_VOLCANOBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Swimmer1Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_MARSHBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Swimmer2Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_SOULBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Guard3Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_RAINBOWBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Guard4Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_THUNDERBADGE_CHECK, EVENT_PASSED_CASCADEBADGE_CHECK
-	call Route23CheckForBadgeScript
-	jp TextScriptEnd
-
-Route23Guard5Text:
-	text_asm
-	EventFlagBit a, EVENT_PASSED_CASCADEBADGE_CHECK
+	ld a, 6 ; EarthBadge index
 	call Route23CheckForBadgeScript
 	jp TextScriptEnd
 
@@ -213,18 +115,13 @@ Route23CheckForBadgeScript:
 .have_badge
 	ld hl, Route23OhThatIsTheBadgeText
 	call PrintText
-	ld a, [wWhichBadge]
-	ld c, a
 	ld b, FLAG_SET
-	EventFlagAddress hl, EVENT_PASSED_CASCADEBADGE_CHECK
+	ld c, EVENT_PASSED_EARTHBADGE_CHECK
+	ld hl, wEventFlags
 	predef FlagActionPredef
 	ld a, SCRIPT_ROUTE23_RESET_TO_DEFAULT
 	ld [wRoute23CurScript], a
 	ret
-
-Route23PrintOhThatsTheBadgeTextScript: ; unreferenced
-	ld hl, Route23OhThatIsTheBadgeText
-	jp PrintText
 
 Route23YouDontHaveTheBadgeYetText:
 	text_far _Route23YouDontHaveTheBadgeYetText

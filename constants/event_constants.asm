@@ -142,6 +142,7 @@
 	const EVENT_1BF ; ???
 	const_skip 32
 	const EVENT_GOT_COIN_CASE
+	const EVENT_BEAT_LILY
 
 ; Fuchsia City events
 	const_next $238
@@ -190,6 +191,7 @@
 	const EVENT_GAVE_FOSSIL_TO_LAB
 	const EVENT_LAB_STILL_REVIVING_FOSSIL
 	const EVENT_LAB_HANDING_OVER_FOSSIL_MON
+	const EVENT_BEAT_MEW
 
 ; Saffron City events
 	const_next $340
@@ -586,6 +588,7 @@
 	const EVENT_BEAT_VICTORY_ROAD_3_TRAINER_1
 	const EVENT_BEAT_VICTORY_ROAD_3_TRAINER_2
 	const EVENT_BEAT_VICTORY_ROAD_3_TRAINER_3
+	const EVENT_BEAT_OAK
 	const_skip
 	const EVENT_VICTORY_ROAD_3_BOULDER_ON_SWITCH2
 
@@ -771,6 +774,10 @@ DEF INDIGO_PLATEAU_EVENTS_END EQU const_value - 1
 	const EVENT_SEAFOAM4_BOULDER2_DOWN_HOLE
 	const_skip 8
 	const EVENT_BEAT_ARTICUNO
+
+; Post Game events
+	const_next $9E0
+	const EVENT_PLAYER_IS_CHAMPION
 
 ; End of events
 	const_next $A00

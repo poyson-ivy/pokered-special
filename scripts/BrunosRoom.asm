@@ -27,7 +27,9 @@ BrunoShowOrHideExitBlock:
 
 ResetBrunoScript:
 	xor a ; SCRIPT_BRUNOSROOM_DEFAULT
+	ld [wJoyIgnore], a
 	ld [wBrunosRoomCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 BrunosRoom_ScriptPointers:
@@ -37,6 +39,7 @@ BrunosRoom_ScriptPointers:
 	dw_const BrunosRoomBrunoEndBattleScript,        SCRIPT_BRUNOSROOM_BRUNO_END_BATTLE
 	dw_const BrunosRoomPlayerIsMovingScript,        SCRIPT_BRUNOSROOM_PLAYER_IS_MOVING
 	dw_const BrunosRoomNoopScript,                  SCRIPT_BRUNOSROOM_NOOP
+	dw_const BrunosRoomBrunoRematchEndBattleScript, SCRIPT_BRUNOSROOM_BRUNO_REMATCH_END_BATTLE
 
 BrunosRoomNoopScript:
 	ret
@@ -114,6 +117,25 @@ BrunosRoomBrunoEndBattleScript:
 	ldh [hTextID], a
 	jp DisplayTextID
 
+BrunosRoomBrunoRematchEndBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, ResetBrunoScript
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_BRUNOS_ROOM_TRAINER_0
+
+	; Visually update the door tile
+	ld a, $5
+	ld [wNewTileBlockID], a
+	lb bc, 0, 2
+	predef ReplaceTileBlock
+
+	ld a, TEXT_BRUNOSROOM_BRUNO
+	ldh [hTextID], a
+	call DisplayTextID
+	jp ResetBrunoScript
+
 BrunosRoom_TextPointers:
 	def_text_pointers
 	dw_const BrunosRoomBrunoText,            TEXT_BRUNOSROOM_BRUNO
@@ -127,8 +149,44 @@ BrunosRoomTrainerHeader0:
 
 BrunosRoomBrunoText:
 	text_asm
+	CheckEvent EVENT_BEAT_BRUNOS_ROOM_TRAINER_0
+	jr nz, .afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematch
+
+	; --- Normal Battle ---
 	ld hl, BrunosRoomTrainerHeader0
 	call TalkToTrainer
+	jp TextScriptEnd
+
+.rematch
+	; --- Rematch Battle ---
+	ld hl, BrunosRoomBrunoRematchPreBattleText
+	call PrintText
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld hl, BrunosRoomBrunoRematchDefeatedText
+	ld de, BrunosRoomBrunoRematchDefeatedText
+	call SaveEndBattleTextPointers
+	ld a, OPP_BRUNO
+	ld [wCurOpponent], a
+	ld a, 2 ; Roster 2
+	ld [wTrainerNo], a
+	ld a, SCRIPT_BRUNOSROOM_BRUNO_REMATCH_END_BATTLE
+	ld [wBrunosRoomCurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematchAfter
+	ld hl, BrunoAfterBattleText
+	call PrintText
+	jp TextScriptEnd
+.rematchAfter
+	ld hl, BrunosRoomBrunoRematchAfterBattleText
+	call PrintText
 	jp TextScriptEnd
 
 BrunoBeforeBattleText:
@@ -145,4 +203,16 @@ BrunoAfterBattleText:
 
 BrunosRoomBrunoDontRunAwayText:
 	text_far _BrunosRoomBrunoDontRunAwayText
+	text_end
+
+BrunosRoomBrunoRematchPreBattleText:
+	text_far _BrunosRoomBrunoRematchPreBattleText
+	text_end
+
+BrunosRoomBrunoRematchDefeatedText:
+	text_far _BrunosRoomBrunoRematchDefeatedText
+	text_end
+
+BrunosRoomBrunoRematchAfterBattleText:
+	text_far _BrunosRoomBrunoRematchAfterBattleText
 	text_end

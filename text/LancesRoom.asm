@@ -62,3 +62,46 @@ _LancesRoomLanceAfterBattleText::
 	line "#MON LEAGUE"
 	cont "champion!@"
 	text_end
+
+_LancesRoomLanceRematchBeforeBattleText::
+	text "Ah! I heard about"
+	line "your return,"
+	cont "<PLAYER>!"
+
+	para "Well, are you"
+	line "ready to lose"
+	cont "once more?"
+
+	para "Your LEAGUE"
+	line "rematch ends"
+	cont "with me, <PLAYER>!"
+	done
+
+_LancesRoomLanceRematchEndBattleText::
+	text "That's it!"
+
+	para "I hate to admit"
+	line "it, but you are a"
+	cont "#MON master!"
+	prompt
+
+_LancesRoomLanceRematchAfterBattleText::
+	text "I still can't"
+	line "believe my"
+	cont "dragons lost to"
+	cont "you, <PLAYER>!"
+
+	para "As you know, you"
+	line "have to face"
+	cont "another trainer!"
+	
+	para "His name is..."
+
+	para "<RIVAL>!"
+	line "He beat the ELITE"
+	cont "FOUR before you!"
+
+	para "He is the real"
+	line "#MON LEAGUE"
+	cont "champion!@"
+	text_end

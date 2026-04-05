@@ -91,7 +91,11 @@ LancesRoomLanceEndBattleScript:
 	jp z, ResetLanceScript
 	ld a, TEXT_LANCESROOM_LANCE
 	ldh [hTextID], a
-	jp DisplayTextID
+	call DisplayTextID
+	; MUST advance to NOOP here to prevent the infinite text/battle loop!
+	ld a, SCRIPT_LANCESROOM_NOOP
+	ld [wLancesRoomCurScript], a
+	ret
 
 WalkToLance:
 ; Moves the player down the hallway to Lance's room.
@@ -133,13 +137,34 @@ LancesRoom_TextPointers:
 LancesRoomTrainerHeaders:
 	def_trainers
 LancesRoomTrainerHeader0:
-	trainer EVENT_BEAT_LANCES_ROOM_TRAINER_0, 0, LancesRoomLanceBeforeBattleText, LancesRoomLanceEndBattleText, LancesRoomLanceAfterBattleText
+	trainer EVENT_BEAT_LANCES_ROOM_TRAINER_0,       0, LancesRoomLanceBeforeBattleText, LancesRoomLanceEndBattleText, LancesRoomLanceAfterBattleText
+LancesRoomTrainerHeader1:
+	; Using the + 1 math satisfies the trainer macro's sequential bit assertion 
+	; and automatically assigns Team 2 because it's the second header!
+	trainer (EVENT_BEAT_LANCES_ROOM_TRAINER_0 + 1), 0, LancesRoomLanceRematchBeforeBattleText, LancesRoomLanceRematchEndBattleText, LancesRoomLanceRematchAfterBattleText
 	db -1 ; end
 
 LancesRoomLanceText:
 	text_asm
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematch
+	; Normal encounter
 	ld hl, LancesRoomTrainerHeader0
 	call TalkToTrainer
+	jp TextScriptEnd
+.rematch
+	; TalkToTrainer automatically handles roster queues, text states, and loop prevention
+	ld hl, LancesRoomTrainerHeader1
+	call TalkToTrainer
+	
+	; Force the battle engine to use the rematch roster
+	; (TalkToTrainer pulls the default roster from map objects)
+	CheckEvent EVENT_BEAT_LANCE
+	jr nz, .skipRosterOverride
+	ld a, 2 ; Roster 2
+	ld [wTrainerNo], a
+.skipRosterOverride
+
 	jp TextScriptEnd
 
 LancesRoomLanceBeforeBattleText:
@@ -152,6 +177,20 @@ LancesRoomLanceEndBattleText:
 
 LancesRoomLanceAfterBattleText:
 	text_far _LancesRoomLanceAfterBattleText
+	text_asm
+	SetEvent EVENT_BEAT_LANCE
+	jp TextScriptEnd
+
+LancesRoomLanceRematchBeforeBattleText:
+	text_far _LancesRoomLanceRematchBeforeBattleText
+	text_end
+
+LancesRoomLanceRematchEndBattleText:
+	text_far _LancesRoomLanceRematchEndBattleText
+	text_end
+
+LancesRoomLanceRematchAfterBattleText:
+	text_far _LancesRoomLanceRematchAfterBattleText
 	text_asm
 	SetEvent EVENT_BEAT_LANCE
 	jp TextScriptEnd

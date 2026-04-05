@@ -35,3 +35,28 @@ _BrunosRoomBrunoDontRunAwayText::
 	text "Someone's voice:"
 	line "Don't run away!"
 	done
+
+_BrunosRoomBrunoRematchPreBattleText::
+	text "I am BRUNO of"
+	line "the ELITE FOUR!"
+
+	para "You're very"
+	line "much aware of"
+	cont "this, though,"
+	cont "so I shall"
+	cont "bore you no"
+	cont "longer!"
+
+	para "Have at you!"
+	done
+
+_BrunosRoomBrunoRematchDefeatedText::
+	text "Why?"
+	line "How could I lose?"
+	prompt
+
+_BrunosRoomBrunoRematchAfterBattleText::
+	text "My job is done!"
+	line "Go face your next"
+	cont "challenge!"
+	done

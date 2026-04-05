@@ -29,16 +29,19 @@ LoreleiShowOrHideExitBlock:
 
 ResetLoreleiScript:
 	xor a ; SCRIPT_LORELEISROOM_DEFAULT
+	ld [wJoyIgnore], a
 	ld [wLoreleisRoomCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 LoreleisRoom_ScriptPointers:
 	def_script_pointers
-	dw_const LoreleisRoomDefaultScript,             SCRIPT_LORELEISROOM_DEFAULT
-	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_LORELEISROOM_LORELEI_START_BATTLE
-	dw_const LoreleisRoomLoreleiEndBattleScript,    SCRIPT_LORELEISROOM_LORELEI_END_BATTLE
-	dw_const LoreleisRoomPlayerIsMovingScript,      SCRIPT_LORELEISROOM_PLAYER_IS_MOVING
-	dw_const LoreleisRoomNoopScript,                SCRIPT_LORELEISROOM_NOOP
+	dw_const LoreleisRoomDefaultScript,                 SCRIPT_LORELEISROOM_DEFAULT
+	dw_const DisplayEnemyTrainerTextAndStartBattle,     SCRIPT_LORELEISROOM_LORELEI_START_BATTLE
+	dw_const LoreleisRoomLoreleiEndBattleScript,        SCRIPT_LORELEISROOM_LORELEI_END_BATTLE
+	dw_const LoreleisRoomPlayerIsMovingScript,          SCRIPT_LORELEISROOM_PLAYER_IS_MOVING
+	dw_const LoreleisRoomNoopScript,                    SCRIPT_LORELEISROOM_NOOP
+	dw_const LoreleisRoomLoreleiRematchEndBattleScript, SCRIPT_LORELEISROOM_LORELEI_REMATCH_END_BATTLE
 
 LoreleisRoomNoopScript:
 	ret
@@ -116,6 +119,25 @@ LoreleisRoomLoreleiEndBattleScript:
 	ldh [hTextID], a
 	jp DisplayTextID
 
+LoreleisRoomLoreleiRematchEndBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, ResetLoreleiScript
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_LORELEIS_ROOM_TRAINER_0 ; Open the door logically
+	
+	; Visually update the door tile
+	ld a, $5
+	ld [wNewTileBlockID], a
+	lb bc, 0, 2
+	predef ReplaceTileBlock
+
+	ld a, TEXT_LORELEISROOM_LORELEI
+	ldh [hTextID], a
+	call DisplayTextID
+	jp ResetLoreleiScript
+
 LoreleisRoom_TextPointers:
 	def_text_pointers
 	dw_const LoreleisRoomLoreleiText,            TEXT_LORELEISROOM_LORELEI
@@ -129,8 +151,44 @@ LoreleisRoomTrainerHeader0:
 
 LoreleisRoomLoreleiText:
 	text_asm
+	CheckEvent EVENT_BEAT_LORELEIS_ROOM_TRAINER_0
+	jr nz, .afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematch
+
+	; --- Normal Battle ---
 	ld hl, LoreleisRoomTrainerHeader0
 	call TalkToTrainer
+	jp TextScriptEnd
+
+.rematch
+	; --- Rematch Battle ---
+	ld hl, LoreleisRoomLoreleiRematchPreBattleText
+	call PrintText
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld hl, LoreleisRoomLoreleiRematchDefeatedText
+	ld de, LoreleisRoomLoreleiRematchDefeatedText
+	call SaveEndBattleTextPointers
+	ld a, OPP_LORELEI
+	ld [wCurOpponent], a
+	ld a, 2 ; Roster 2 - Change this if her rematch team is a different roster number
+	ld [wTrainerNo], a
+	ld a, SCRIPT_LORELEISROOM_LORELEI_REMATCH_END_BATTLE
+	ld [wLoreleisRoomCurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.afterBattle
+	CheckEvent EVENT_PLAYER_IS_CHAMPION
+	jr nz, .rematchAfter
+	ld hl, LoreleisRoomLoreleiAfterBattleText
+	call PrintText
+	jp TextScriptEnd
+.rematchAfter
+	ld hl, LoreleisRoomLoreleiRematchAfterBattleText
+	call PrintText
 	jp TextScriptEnd
 
 LoreleisRoomLoreleiBeforeBattleText:
@@ -147,4 +205,16 @@ LoreleisRoomLoreleiAfterBattleText:
 
 LoreleisRoomLoreleiDontRunAwayText:
 	text_far _LoreleisRoomLoreleiDontRunAwayText
+	text_end
+
+LoreleisRoomLoreleiRematchPreBattleText:
+	text_far _LoreleisRoomLoreleiRematchPreBattleText
+	text_end
+
+LoreleisRoomLoreleiRematchDefeatedText:
+	text_far _LoreleisRoomLoreleiRematchDefeatedText
+	text_end
+
+LoreleisRoomLoreleiRematchAfterBattleText:
+	text_far _LoreleisRoomLoreleiRematchAfterBattleText
 	text_end

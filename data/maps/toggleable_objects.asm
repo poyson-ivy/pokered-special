@@ -163,6 +163,9 @@ ToggleableObjectStates:
 	toggleable_objects_for MR_FUJIS_HOUSE
 	toggle_object_state MRFUJISHOUSE_MR_FUJI, OFF
 
+	toggleable_objects_for CELADON_MANSION_3F
+	toggle_object_state CELADONMANSION3F_LILY, OFF
+
 	toggleable_objects_for CELADON_MANSION_ROOF_HOUSE
 	toggle_object_state CELADONMANSION_ROOF_HOUSE_EEVEE_POKEBALL, ON
 
@@ -250,6 +253,7 @@ ToggleableObjectStates:
 	toggle_object_state VICTORYROAD3F_MAX_REVIVE,   ON
 	toggle_object_state VICTORYROAD3F_TM_EXPLOSION, ON
 	toggle_object_state VICTORYROAD3F_BOULDER4,     ON
+	toggle_object_state VICTORYROAD3F_OAK,          OFF
 
 	toggleable_objects_for ROCKET_HIDEOUT_B1F
 	toggle_object_state ROCKETHIDEOUTB1F_ESCAPE_ROPE,  ON
@@ -358,6 +362,7 @@ ToggleableObjectStates:
 	toggle_object_state POKEMONMANSIONB1F_TM_BLIZZARD,  ON
 	toggle_object_state POKEMONMANSIONB1F_TM_SOLARBEAM, ON
 	toggle_object_state POKEMONMANSIONB1F_SECRET_KEY,   ON
+	toggle_object_state POKEMONMANSIONB1F_MEW,          OFF
 
 	toggleable_objects_for SAFARI_ZONE_EAST
 	toggle_object_state SAFARIZONEEAST_FULL_RESTORE, ON
