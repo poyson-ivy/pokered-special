@@ -86,9 +86,9 @@ Init::
 
 	predef LoadSGB
 
-	ld a, BANK(SFX_Shooting_Star)
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	ld a, 0 ; BANK(SFX_Shooting_Star)
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
 	ld a, HIGH(vBGMap1)
 	ldh [hAutoBGTransferDest + 1], a
 	xor a
@@ -115,12 +115,12 @@ ClearVram::
 
 
 StopAllSounds::
-	ld a, BANK("Audio Engine 1")
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	ld a, 0 ; BANK("Audio Engine 1")
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
 	xor a
-	ld [wAudioFadeOutControl], a
-	ld [wNewSoundID], a
+	ld [wMusicFade], a
+	ld [wMusicFadeID], a
 	ld [wLastMusicSoundID], a
 	dec a
 	jp PlaySound
